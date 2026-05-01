@@ -1,18 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>OAuth Redirect</title>
+    <title>Financier Auth</title>
+    <meta charset="utf-8">
 </head>
 <body>
+    <h3>Redirecting back to Financier App...</h3>
+    <p>If your app doesn't open automatically, <a id="fallback-link" href="#">click here</a>.</p>
     <script>
-        // Plaid's required script to handle the return from OAuth
-        const handler = window.opener.plaidLinkHandler;
-        if (handler) {
-            handler.resumeOAuth();
-        } else {
-            console.error("Link handler not found");
-        }
+        // Extract the full query string Plaid passed to this page
+        const queryString = window.location.search;
+        
+        // Construct the custom deep link for our desktop app
+        // The scheme 'financier://' will trigger the OS to open the Tauri app
+        const appUri = 'financier://oauth' + queryString;
+        
+        // Update the fallback link just in case
+        document.getElementById('fallback-link').href = appUri;
+        
+        // Attempt to redirect the browser to the app immediately
+        window.location.replace(appUri);
     </script>
 </body>
 </html>
+
